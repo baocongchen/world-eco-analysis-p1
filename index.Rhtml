@@ -47,7 +47,7 @@ tbl_na <- filter(dat, is.na(`GDP (Billions, PPP)`))
 as.data.frame(tbl_na)
 tbl <- filter(dat, !is.na(`GDP (Billions, PPP)`))
 end.rcode-->
-<p>The result shows that almost all variables have NAs in these 15 records. I examine the structure, and transform the data if neccessary.</p>
+<p>The result shows that almost all variables have NAs in these 15 records; thus, it's reasonable to remove them from the data. I examine the structure, and transform the data if neccessary.</p>
 <!--begin.rcode
 str(tbl)
 end.rcode-->
