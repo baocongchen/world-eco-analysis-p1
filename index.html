@@ -1,0 +1,379 @@
+<html>
+
+<head>
+<style type="text/css">
+.knitr .inline {
+  background-color: #f7f7f7;
+  border:solid 1px #B0B0B0;
+}
+.error {
+	font-weight: bold;
+	color: #FF0000;
+}
+.warning {
+	font-weight: bold;
+}
+.message {
+	font-style: italic;
+}
+.source, .output, .warning, .error, .message {
+	padding: 0 1em;
+  border:solid 1px #F7F7F7;
+}
+.source {
+  background-color: #f5f5f5;
+}
+.rimage .left {
+  text-align: left;
+}
+.rimage .right {
+  text-align: right;
+}
+.rimage .center {
+  text-align: center;
+}
+.hl.num {
+  color: #AF0F91;
+}
+.hl.str {
+  color: #317ECC;
+}
+.hl.com {
+  color: #AD95AF;
+  font-style: italic;
+}
+.hl.opt {
+  color: #000000;
+}
+.hl.std {
+  color: #585858;
+}
+.hl.kwa {
+  color: #295F94;
+  font-weight: bold;
+}
+.hl.kwb {
+  color: #B05A65;
+}
+.hl.kwc {
+  color: #55aa55;
+}
+.hl.kwd {
+  color: #BC5A65;
+  font-weight: bold;
+}
+</style>
+<title>World Economy 2016 Part 1: Processing Data</title>
+<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+</head>
+
+<body>
+<div class="title">
+<h1>An Analysis of The World's Economy 2016 - Part 1: Processing Data</h1>
+<i class="author pull-right">- by <a href="https://linkedin.com/buuthongtran">Buu Thong Tran</a> -</i>
+</div>
+<h2>1. Introduction</h2>
+<p>In this project, I will use data processing techniques to clean the data so as to make it ready for later analysis. The data used in this project can be downloaded from <a href="http://www.heritage.org/index/download">The Heritage Foundation</a>.</p>
+
+<h2>2. Import data</h2>
+<div class="chunk" id="unnamed-chunk-1"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">options</span><span class="hl std">(</span><span class="hl kwc">warn</span><span class="hl std">=</span><span class="hl opt">-</span><span class="hl num">1</span><span class="hl std">)</span>
+<span class="hl kwd">library</span><span class="hl std">(readxl)</span>
+<span class="hl std">dat</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">read_excel</span><span class="hl std">(</span><span class="hl str">&quot;index2016_data.xls&quot;</span><span class="hl std">)</span>
+<span class="hl kwd">cat</span><span class="hl std">(</span><span class="hl str">&quot;The data has&quot;</span><span class="hl std">,</span> <span class="hl kwd">ncol</span><span class="hl std">(dat),</span> <span class="hl str">&quot;variables&quot;</span><span class="hl std">,</span> <span class="hl str">&quot;and&quot;</span><span class="hl std">,</span> <span class="hl kwd">nrow</span><span class="hl std">(dat),</span> <span class="hl str">&quot;records&quot;</span><span class="hl std">)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">## The data has 43 variables and 200 records
+</pre></div>
+</div></div>
+
+<p>Here is the list of variables</p>
+<div class="chunk" id="unnamed-chunk-2"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">names</span><span class="hl std">(dat)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">##  [1] &quot;CountryID&quot;                                  
+##  [2] &quot;Country Name&quot;                               
+##  [3] &quot;WEBNAME&quot;                                    
+##  [4] &quot;Region&quot;                                     
+##  [5] &quot;World Rank&quot;                                 
+##  [6] &quot;Region Rank&quot;                                
+##  [7] &quot;2016 Score&quot;                                 
+##  [8] &quot;Change in Yearly Score from 2015&quot;           
+##  [9] &quot;Property Rights&quot;                            
+## [10] &quot;Change in Property Rights from 2015&quot;        
+## [11] &quot;Freedom from Corruption&quot;                    
+## [12] &quot;Change in Freedom from Corruption from 2015&quot;
+## [13] &quot;Fiscal Freedom &quot;                            
+## [14] &quot;Change in Fiscal Freedom from 2015&quot;         
+## [15] &quot;Gov't Spending&quot;                             
+## [16] &quot;Change in Gov't Spending from 2015&quot;         
+## [17] &quot;Business Freedom&quot;                           
+## [18] &quot;Change in Business Freedom from 2015&quot;       
+## [19] &quot;Labor Freedom&quot;                              
+## [20] &quot;Change in Labor Freedom from 2015&quot;          
+## [21] &quot;Monetary Freedom&quot;                           
+## [22] &quot;Change in Monetary Freedom from 2015&quot;       
+## [23] &quot;Trade Freedom&quot;                              
+## [24] &quot;Change in Trade Freedom from 2015&quot;          
+## [25] &quot;Investment Freedom &quot;                        
+## [26] &quot;Change in Investment Freedom from 2015&quot;     
+## [27] &quot;Financial Freedom&quot;                          
+## [28] &quot;Change in Financial Freedom from 2015&quot;      
+## [29] &quot;Tariff Rate (%)&quot;                            
+## [30] &quot;Income Tax Rate (%)&quot;                        
+## [31] &quot;Corporate Tax Rate (%)&quot;                     
+## [32] &quot;Tax Burden % of GDP&quot;                        
+## [33] &quot;Gov't Expenditure % of GDP &quot;                
+## [34] &quot;Country&quot;                                    
+## [35] &quot;Population (Millions)&quot;                      
+## [36] &quot;GDP (Billions, PPP)&quot;                        
+## [37] &quot;GDP Growth Rate (%)&quot;                        
+## [38] &quot;5 Year GDP Growth Rate (%)&quot;                 
+## [39] &quot;GDP per Capita (PPP)&quot;                       
+## [40] &quot;Unemployment (%)&quot;                           
+## [41] &quot;Inflation (%)&quot;                              
+## [42] &quot;FDI Inflow (Millions)&quot;                      
+## [43] &quot;Public Debt (% of GDP)&quot;
+</pre></div>
+</div></div>
+
+<h2>3. Choosing variables</h2>
+<p>I am particularly interested in <code>Country Name</code>, <code>Region</code>, <code>GDP (Billions, PPP)</code>, <code>GDP per Capita (PPP)</code>, <code>Unemployment (%)</code>, <code>Inflation (%)</code>, <code>Public Debt (% of GDP)</code>, so I will choose these variables for later analysis.</p>
+
+<div class="chunk" id="unnamed-chunk-3"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">suppressMessages</span><span class="hl std">(</span><span class="hl kwd">library</span><span class="hl std">(dplyr))</span>
+<span class="hl std">selected_col</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">c</span><span class="hl std">(</span><span class="hl str">&quot;Country Name&quot;</span><span class="hl std">,</span> <span class="hl str">&quot;Region&quot;</span><span class="hl std">,</span> <span class="hl str">&quot;GDP (Billions, PPP)&quot;</span><span class="hl std">,</span> <span class="hl str">&quot;GDP per Capita (PPP)&quot;</span><span class="hl std">,</span> <span class="hl str">&quot;Unemployment (%)&quot;</span><span class="hl std">,</span> <span class="hl str">&quot;Inflation (%)&quot;</span><span class="hl std">,</span> <span class="hl str">&quot;Public Debt (% of GDP)&quot;</span><span class="hl std">)</span>
+<span class="hl std">dat</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">select</span><span class="hl std">(dat,</span> <span class="hl kwd">one_of</span><span class="hl std">(selected_col))</span>
+</pre></div>
+</div></div>
+
+<h2>4. Cleaning data</h2>
+<p>Let's take a look at the summary of the data.</p>
+<div class="chunk" id="unnamed-chunk-4"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">summary</span><span class="hl std">(dat)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">##  Country Name          Region          GDP (Billions, PPP)
+##  Length:200         Length:200         Min.   :    0.188  
+##  Class :character   Class :character   1st Qu.:   18.844  
+##  Mode  :character   Mode  :character   Median :   71.122  
+##                                        Mean   :  584.853  
+##                                        3rd Qu.:  371.344  
+##                                        Max.   :17617.321  
+##                                        NA's   :15         
+##  GDP per Capita (PPP) Unemployment (%)   Inflation (%)     
+##  Length:200           Length:200         Length:200        
+##  Class :character     Class :character   Class :character  
+##  Mode  :character     Mode  :character   Mode  :character  
+##                                                            
+##                                                            
+##                                                            
+##                                                            
+##  Public Debt (% of GDP)
+##  Length:200            
+##  Class :character      
+##  Mode  :character      
+##                        
+##                        
+##                        
+## 
+</pre></div>
+</div></div>
+<p><code>Income Tax Rate (%)</code> has NAs in 15 records. So I will examine whether I should filter those records from the data.</p>
+<div class="chunk" id="unnamed-chunk-5"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">tbl_na</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">filter</span><span class="hl std">(dat,</span> <span class="hl kwd">is.na</span><span class="hl std">(`GDP (Billions, PPP)`))</span>
+<span class="hl kwd">as.data.frame</span><span class="hl std">(tbl_na)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">##    Country Name             Region GDP (Billions, PPP)
+## 1       Somalia Sub-Saharan Africa                  NA
+## 2          &lt;NA&gt;               &lt;NA&gt;                  NA
+## 3          &lt;NA&gt;               &lt;NA&gt;                  NA
+## 4          &lt;NA&gt;               &lt;NA&gt;                  NA
+## 5          &lt;NA&gt;               &lt;NA&gt;                  NA
+## 6          &lt;NA&gt;               &lt;NA&gt;                  NA
+## 7          &lt;NA&gt;               &lt;NA&gt;                  NA
+## 8          &lt;NA&gt;               &lt;NA&gt;                  NA
+## 9          &lt;NA&gt;               &lt;NA&gt;                  NA
+## 10         &lt;NA&gt;               &lt;NA&gt;                  NA
+## 11         &lt;NA&gt;               &lt;NA&gt;                  NA
+## 12         &lt;NA&gt;               &lt;NA&gt;                  NA
+## 13         &lt;NA&gt;               &lt;NA&gt;                  NA
+## 14         &lt;NA&gt;               &lt;NA&gt;                  NA
+## 15         &lt;NA&gt;               &lt;NA&gt;                  NA
+##    GDP per Capita (PPP) Unemployment (%) Inflation (%)
+## 1            600.000000              N/A           N/A
+## 2                  &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 3                  &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 4                  &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 5                  &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 6                  &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 7                  &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 8                  &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 9                  &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 10                 &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 11                 &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 12                 &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 13                 &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 14                 &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+## 15                 &lt;NA&gt;             &lt;NA&gt;          &lt;NA&gt;
+##    Public Debt (% of GDP)
+## 1                     N/A
+## 2                    &lt;NA&gt;
+## 3                    &lt;NA&gt;
+## 4                    &lt;NA&gt;
+## 5                    &lt;NA&gt;
+## 6                    &lt;NA&gt;
+## 7                    &lt;NA&gt;
+## 8                    &lt;NA&gt;
+## 9                    &lt;NA&gt;
+## 10                   &lt;NA&gt;
+## 11                   &lt;NA&gt;
+## 12                   &lt;NA&gt;
+## 13                   &lt;NA&gt;
+## 14                   &lt;NA&gt;
+## 15                   &lt;NA&gt;
+</pre></div>
+<div class="source"><pre class="knitr r"><span class="hl std">tbl</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">filter</span><span class="hl std">(dat,</span> <span class="hl opt">!</span><span class="hl kwd">is.na</span><span class="hl std">(`GDP (Billions, PPP)`))</span>
+</pre></div>
+</div></div>
+<p>The result shows that almost all variables have NAs in these 15 records. I examine the structure, and transform the data if neccessary.</p>
+<div class="chunk" id="unnamed-chunk-6"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">str</span><span class="hl std">(tbl)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">## Classes 'tbl_df', 'tbl' and 'data.frame':	185 obs. of  7 variables:
+##  $ Country Name          : chr  &quot;Afghanistan&quot; &quot;Albania&quot; &quot;Algeria&quot; &quot;Angola&quot; ...
+##  $ Region                : chr  &quot;Asia-Pacific&quot; &quot;Europe&quot; &quot;Middle East / North Africa&quot; &quot;Sub-Saharan Africa&quot; ...
+##  $ GDP (Billions, PPP)   : num  60.6 31.6 551.8 175.6 947.6 ...
+##  $ GDP per Capita (PPP)  : chr  &quot;1936.715000&quot; &quot;11376.825000&quot; &quot;14258.620000&quot; &quot;7203.347000&quot; ...
+##  $ Unemployment (%)      : chr  &quot;9.100000&quot; &quot;16.100000&quot; &quot;9.500000&quot; &quot;6.800000&quot; ...
+##  $ Inflation (%)         : chr  &quot;4.611000&quot; &quot;1.625000&quot; &quot;2.917000&quot; &quot;7.296000&quot; ...
+##  $ Public Debt (% of GDP): chr  &quot;6.700000&quot; &quot;72.564000&quot; &quot;8.764000&quot; &quot;38.043000&quot; ...
+</pre></div>
+</div></div>
+
+<p>The data types of <code>GDP per Capita (PPP)</code>, <code>Unemployment (%)</code>, <code>Inflation (%)</code>, and <code>Public Debt (% of GDP)</code> should be numeric instead of character. Thus, I will convert them into numeric values.</p>
+
+<div class="chunk" id="unnamed-chunk-7"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">convert</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">c</span><span class="hl std">(</span><span class="hl str">&quot;GDP per Capita (PPP)&quot;</span><span class="hl std">,</span> <span class="hl str">&quot;Unemployment (%)&quot;</span><span class="hl std">,</span> <span class="hl str">&quot;Inflation (%)&quot;</span><span class="hl std">,</span> <span class="hl str">&quot;Public Debt (% of GDP)&quot;</span><span class="hl std">)</span>
+<span class="hl kwa">for</span> <span class="hl std">(variable</span> <span class="hl kwa">in</span> <span class="hl std">convert) {</span>
+  <span class="hl std">tbl[variable]</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">lapply</span><span class="hl std">(tbl[variable],as.double)</span>
+<span class="hl std">}</span>
+<span class="hl kwd">str</span><span class="hl std">(tbl)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">## Classes 'tbl_df', 'tbl' and 'data.frame':	185 obs. of  7 variables:
+##  $ Country Name          : chr  &quot;Afghanistan&quot; &quot;Albania&quot; &quot;Algeria&quot; &quot;Angola&quot; ...
+##  $ Region                : chr  &quot;Asia-Pacific&quot; &quot;Europe&quot; &quot;Middle East / North Africa&quot; &quot;Sub-Saharan Africa&quot; ...
+##  $ GDP (Billions, PPP)   : num  60.6 31.6 551.8 175.6 947.6 ...
+##  $ GDP per Capita (PPP)  : num  1937 11377 14259 7203 22582 ...
+##  $ Unemployment (%)      : num  9.1 16.1 9.5 6.8 8.2 17.1 6 5 5.2 15.4 ...
+##  $ Inflation (%)         : num  4.61 1.62 2.92 7.3 37.6 ...
+##  $ Public Debt (% of GDP): num  6.7 72.56 8.76 38.04 48.56 ...
+</pre></div>
+<div class="source"><pre class="knitr r"><span class="hl kwd">summary</span><span class="hl std">(tbl)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">##  Country Name          Region          GDP (Billions, PPP)
+##  Length:185         Length:185         Min.   :    0.188  
+##  Class :character   Class :character   1st Qu.:   18.844  
+##  Mode  :character   Mode  :character   Median :   71.122  
+##                                        Mean   :  584.853  
+##                                        3rd Qu.:  371.344  
+##                                        Max.   :17617.321  
+##                                                           
+##  GDP per Capita (PPP) Unemployment (%) Inflation (%)    
+##  Min.   :   607.2     Min.   : 0.300   Min.   :-1.6000  
+##  1st Qu.:  4113.1     1st Qu.: 4.300   1st Qu.: 0.7835  
+##  Median : 11705.3     Median : 6.900   Median : 2.7695  
+##  Mean   : 19675.6     Mean   : 8.906   Mean   : 4.3619  
+##  3rd Qu.: 25670.3     3rd Qu.:11.000   3rd Qu.: 5.9615  
+##  Max.   :158976.0     Max.   :60.000   Max.   :62.1690  
+##  NA's   :1            NA's   :14       NA's   :1        
+##  Public Debt (% of GDP)
+##  Min.   :  0.00        
+##  1st Qu.: 28.63        
+##  Median : 41.71        
+##  Mean   : 49.74        
+##  3rd Qu.: 65.15        
+##  Max.   :246.42        
+##  NA's   :3
+</pre></div>
+</div></div>
+
+<p>After successfully converting the data types and summarizing the result, I find out that NAs exist in those variables.</p>
+
+<div class="chunk" id="unnamed-chunk-8"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">data.frame</span><span class="hl std">(tbl[</span><span class="hl kwd">is.na</span><span class="hl std">(tbl),])</span>
+</pre></div>
+<div class="output"><pre class="knitr r">##    Country.Name Region GDP..Billions..PPP. GDP.per.Capita..PPP.
+## 1          &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 2          &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 3          &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 4          &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 5          &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 6          &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 7          &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 8          &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 9          &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 10         &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 11         &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 12         &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 13         &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 14         &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 15         &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 16         &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 17         &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 18         &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+## 19         &lt;NA&gt;   &lt;NA&gt;                  NA                   NA
+##    Unemployment.... Inflation.... Public.Debt....of.GDP.
+## 1                NA            NA                     NA
+## 2                NA            NA                     NA
+## 3                NA            NA                     NA
+## 4                NA            NA                     NA
+## 5                NA            NA                     NA
+## 6                NA            NA                     NA
+## 7                NA            NA                     NA
+## 8                NA            NA                     NA
+## 9                NA            NA                     NA
+## 10               NA            NA                     NA
+## 11               NA            NA                     NA
+## 12               NA            NA                     NA
+## 13               NA            NA                     NA
+## 14               NA            NA                     NA
+## 15               NA            NA                     NA
+## 16               NA            NA                     NA
+## 17               NA            NA                     NA
+## 18               NA            NA                     NA
+## 19               NA            NA                     NA
+</pre></div>
+</div></div>
+
+<p>The number of records that have NAs is small, and each of these record has NAs in all chosen variables. Therefore, the best way to deal with these NAs is remove their records from the data.</p>
+
+<div class="chunk" id="unnamed-chunk-9"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">tbl</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">filter</span><span class="hl std">(tbl,</span> <span class="hl opt">!</span><span class="hl kwd">is.na</span><span class="hl std">(`GDP per Capita (PPP)`),</span> <span class="hl opt">!</span><span class="hl kwd">is.na</span><span class="hl std">(`Unemployment (%)`),</span> <span class="hl opt">!</span><span class="hl kwd">is.na</span><span class="hl std">(`Inflation (%)`),</span> <span class="hl opt">!</span><span class="hl kwd">is.na</span><span class="hl std">(`Public Debt (% of GDP)`))</span>
+<span class="hl kwd">summary</span><span class="hl std">(tbl)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">##  Country Name          Region          GDP (Billions, PPP)
+##  Length:170         Length:170         Min.   :    1.09   
+##  Class :character   Class :character   1st Qu.:   25.61   
+##  Mode  :character   Mode  :character   Median :   80.37   
+##                                        Mean   :  634.58   
+##                                        3rd Qu.:  406.37   
+##                                        Max.   :17617.32   
+##  GDP per Capita (PPP) Unemployment (%) Inflation (%)   
+##  Min.   :   607.2     Min.   : 0.300   Min.   :-1.600  
+##  1st Qu.:  4272.4     1st Qu.: 4.350   1st Qu.: 0.894  
+##  Median : 12403.5     Median : 6.900   Median : 2.899  
+##  Mean   : 18981.3     Mean   : 8.945   Mean   : 4.395  
+##  3rd Qu.: 26695.7     3rd Qu.:11.050   3rd Qu.: 5.982  
+##  Max.   :143427.0     Max.   :60.000   Max.   :62.169  
+##  Public Debt (% of GDP)
+##  Min.   :  0.00        
+##  1st Qu.: 29.60        
+##  Median : 41.55        
+##  Mean   : 50.01        
+##  3rd Qu.: 64.77        
+##  Max.   :246.42
+</pre></div>
+</div></div>
+
+<p>The data is clean and ready for later analysis.</p>
+
+<footer class="footer">
+  <div>
+    <p class="text-center"><a href="https://linkedin.com/buuthongtran">Buu Thong Tran</a></p>
+  </div>
+</footer>
+
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

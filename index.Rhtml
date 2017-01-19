@@ -1,0 +1,90 @@
+<html>
+
+<head>
+<title>World Economy 2016 Part 1: Processing Data</title>
+<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+</head>
+
+<body>
+<div class="title">
+<h1>An Analysis of The World's Economy 2016 - Part 1: Processing Data</h1>
+<i class="author pull-right">- by <a href="https://linkedin.com/buuthongtran">Buu Thong Tran</a> -</i>
+</div>
+<h2>1. Introduction</h2>
+<p>In this project, I will use data processing techniques to clean the data so as to make it ready for later analysis. The data used in this project can be downloaded from <a href="http://www.heritage.org/index/download">The Heritage Foundation</a>.</p>
+
+<h2>2. Import data</h2>
+<!--begin.rcode
+options(warn=-1)
+library(readxl)
+dat <- read_excel("index2016_data.xls") 
+cat("The data has", ncol(dat), "variables", "and", nrow(dat), "records")
+
+end.rcode-->
+
+<p>Here is the list of variables</p>
+<!--begin.rcode
+names(dat)
+end.rcode-->
+
+<h2>3. Choosing variables</h2>
+<p>I am particularly interested in <code>Country Name</code>, <code>Region</code>, <code>GDP (Billions, PPP)</code>, <code>GDP per Capita (PPP)</code>, <code>Unemployment (%)</code>, <code>Inflation (%)</code>, <code>Public Debt (% of GDP)</code>, so I will choose these variables for later analysis.</p>
+
+<!--begin.rcode
+suppressMessages(library(dplyr))
+selected_col <- c("Country Name", "Region", "GDP (Billions, PPP)", "GDP per Capita (PPP)", "Unemployment (%)", "Inflation (%)", "Public Debt (% of GDP)")
+dat <- select(dat, one_of(selected_col))
+end.rcode-->
+
+<h2>4. Cleaning data</h2>
+<p>Let's take a look at the summary of the data.</p>
+<!--begin.rcode
+summary(dat)
+end.rcode-->
+<p><code>Income Tax Rate (%)</code> has NAs in 15 records. So I will examine whether I should filter those records from the data.</p>
+<!--begin.rcode
+tbl_na <- filter(dat, is.na(`GDP (Billions, PPP)`))
+as.data.frame(tbl_na)
+tbl <- filter(dat, !is.na(`GDP (Billions, PPP)`))
+end.rcode-->
+<p>The result shows that almost all variables have NAs in these 15 records. I examine the structure, and transform the data if neccessary.</p>
+<!--begin.rcode
+str(tbl)
+end.rcode-->
+
+<p>The data types of <code>GDP per Capita (PPP)</code>, <code>Unemployment (%)</code>, <code>Inflation (%)</code>, and <code>Public Debt (% of GDP)</code> should be numeric instead of character. Thus, I will convert them into numeric values.</p>
+
+<!--begin.rcode
+convert <- c("GDP per Capita (PPP)", "Unemployment (%)", "Inflation (%)", "Public Debt (% of GDP)")
+for (variable in convert) {
+  tbl[variable] <- lapply(tbl[variable],as.double)
+}
+str(tbl)
+summary(tbl)
+end.rcode-->
+
+<p>After successfully converting the data types and summarizing the result, I find out that NAs exist in those variables.</p>
+
+<!--begin.rcode
+data.frame(tbl[is.na(tbl),])
+end.rcode-->
+
+<p>The number of records that have NAs is small, and each of these record has NAs in all chosen variables. Therefore, the best way to deal with these NAs is remove their records from the data.</p>
+
+<!--begin.rcode
+tbl <- filter(tbl, !is.na(`GDP per Capita (PPP)`), !is.na(`Unemployment (%)`), !is.na(`Inflation (%)`), !is.na(`Public Debt (% of GDP)`))
+summary(tbl)
+end.rcode-->
+
+<p>The data is clean and ready for later analysis.</p>
+
+<footer class="footer">
+  <div>
+    <p class="text-center"><a href="https://linkedin.com/buuthongtran">Buu Thong Tran</a></p>
+  </div>
+</footer>
+
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>
